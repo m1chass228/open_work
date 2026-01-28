@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-0436fd7e93d0e4b27c2b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "open_work",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "open_work::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-open_work-Debug-7e2a09da29a1f1ce9b2a.json",
+					"name" : "open_work",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "open_work_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-open_work_autogen-Debug-075f77d2d51a8f51cf78.json",
+					"name" : "open_work_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "open_work_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-open_work_autogen_timestamp_deps-Debug-4fbc7913464b2e20663a.json",
+					"name" : "open_work_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/suse-pc/\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b/work_opener/open_work/build/Desktop-Debug",
+		"source" : "/home/suse-pc/\u0414\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u044b/work_opener/open_work"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

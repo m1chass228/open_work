@@ -1,0 +1,19 @@
+# ninja log v7
+1	161	1769625280352489010	open_work_autogen/timestamp	413c4c28890f24d9
+1	161	1769625280352489010	open_work_autogen/mocs_compilation.cpp	413c4c28890f24d9
+1	161	1769625280352489010	/home/suse-pc/Документы/work_opener/open_work/build/Desktop-Debug/open_work_autogen/timestamp	413c4c28890f24d9
+1	161	1769625280352489010	/home/suse-pc/Документы/work_opener/open_work/build/Desktop-Debug/open_work_autogen/mocs_compilation.cpp	413c4c28890f24d9
+162	1014	1769625280359573223	CMakeFiles/open_work.dir/open_work_autogen/mocs_compilation.cpp.o	272ac502095bd9d3
+163	1038	1769625280360489163	CMakeFiles/open_work.dir/main.cpp.o	f4393fe122738f93
+1	32	1769625295429777488	open_work_autogen/timestamp	413c4c28890f24d9
+1	32	1769625295429777488	open_work_autogen/mocs_compilation.cpp	413c4c28890f24d9
+1	32	1769625295429777488	/home/suse-pc/Документы/work_opener/open_work/build/Desktop-Debug/open_work_autogen/timestamp	413c4c28890f24d9
+1	32	1769625295429777488	/home/suse-pc/Документы/work_opener/open_work/build/Desktop-Debug/open_work_autogen/mocs_compilation.cpp	413c4c28890f24d9
+32	1039	1769625295460778081	CMakeFiles/open_work.dir/mainwindow.cpp.o	50e38ff8eac80c8f
+1039	1193	1769625296467797348	open_work	5982a6a0241df1f8
+1	62	1769625492876520556	open_work_autogen/timestamp	413c4c28890f24d9
+1	62	1769625492876520556	open_work_autogen/mocs_compilation.cpp	413c4c28890f24d9
+1	62	1769625492876520556	/home/suse-pc/Документы/work_opener/open_work/build/Desktop-Debug/open_work_autogen/timestamp	413c4c28890f24d9
+1	62	1769625492876520556	/home/suse-pc/Документы/work_opener/open_work/build/Desktop-Debug/open_work_autogen/mocs_compilation.cpp	413c4c28890f24d9
+63	1164	1769625492938521730	CMakeFiles/open_work.dir/mainwindow.cpp.o	50e38ff8eac80c8f
+1164	1323	1769625494039542589	open_work	5982a6a0241df1f8
