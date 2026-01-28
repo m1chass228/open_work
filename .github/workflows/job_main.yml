@@ -21,14 +21,14 @@ jobs:
       uses: jurplel/install-qt-action@v4
       id: install-qt
       with:
-        version: '6.8.*'                  # Если у тебя не 6.8 — измени (например '6.7.*' или '6.5.*')
+        version: '6.8.*'                  # измени если твоя версия Qt другая
         host: windows
         target: desktop
         arch: win64_mingw
         install-deps: true
 
-    - name: Create build directory
-      run: mkdir build
+    - name: Create build directory (idempotent)
+      run: New-Item -ItemType Directory -Path build -Force
 
     - name: Configure CMake
       working-directory: build
@@ -56,7 +56,6 @@ jobs:
                     --no-system-d3d-compiler \
                     --no-opengl-sw
 
-        # Копируем сам .exe в deploy (windeployqt его не копирует)
         cp open_work.exe deploy/
 
     - name: Create ZIP
