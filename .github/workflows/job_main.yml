@@ -1,58 +1,71 @@
-name: Build for Windows
+name: Build Qt App for Windows (MinGW)
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # можно запускать вручную
+  workflow_dispatch:  # позволяет запустить вручную из интерфейса GitHub
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
       with:
-        submodules: recursive
+        submodules: recursive  # если у тебя есть подмодули — если нет, можно убрать
 
-    - name: Install Qt
+    - name: Install Qt 6 (MinGW)
       uses: jurplel/install-qt-action@v4
       id: install-qt
       with:
-        version: '6.8.*'          # ← если у тебя 6.7, 6.5 или 5.15 — поменяй здесь!
+        version: '6.8.*'              # ← поменяй на свою точную версию Qt, если не 6.8 (например '6.7.*' или '6.5.*')
         host: windows
         target: desktop
         arch: win64_mingw
-        install-deps: true
+        install-deps: true            # ставит дополнительные зависимости MinGW
+        tools: tools_qtcreator, tools_ifw  # опционально, если нужно
+
+    - name: Create build directory
+      run: mkdir build
 
     - name: Configure CMake
+      working-directory: build
       shell: bash
       run: |
-        mkdir -p build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release \
-                 -G "MinGW Makefiles" \
-                 -DCMAKE_PREFIX_PATH="${{ steps.install-qt.outputs.qt-path }}"
+        cmake .. \
+          -DCMAKE_BUILD_TYPE=Release \
+          -G "MinGW Makefiles" \
+          -DCMAKE_PREFIX_PATH="${{ steps.install-qt.outputs.qt-path }}"
 
-    - name: Build
+    - name: Build executable
+      working-directory: build
       shell: bash
-      run: |
-        cd build
-        cmake --build . --config Release --parallel
+      run: cmake --build . --config Release --parallel
 
-    - name: Deploy Qt deps
+    - name: Deploy Qt dependencies (copy all DLLs and plugins)
+      working-directory: build
       shell: bash
       run: |
-        cd build
+        mkdir -p deploy
         windeployqt --release open_work.exe \
-                    --dir deploy
+                    --dir deploy \
+                    --no-translations     # если не нужны переводы — ускоряет
+                    --no-quick-import     # если нет QML
+                    --no-system-d3d-compiler \
+                    --no-opengl-sw
 
-    - name: Package
-      run: Compress-Archive -Path build/deploy/* -DestinationPath open_work-windows.zip
+        # Копируем сам .exe в папку deploy (windeployqt его не копирует автоматически)
+        cp open_work.exe deploy/
 
-    - name: Upload artifact
+    - name: Create ZIP archive
+      run: Compress-Archive -Path build/deploy/* -DestinationPath open_work-windows.zip -Force
+
+    - name: Upload artifact (ZIP с .exe + всеми DLL)
       uses: actions/upload-artifact@v4
       with:
-        name: windows-build
+        name: open_work-windows
         path: open_work-windows.zip
+        retention-days: 14
