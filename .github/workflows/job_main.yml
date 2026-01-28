@@ -1,4 +1,4 @@
-name: Build Qt App for Windows (MinGW)
+name: Build Qt App for Windows (MSVC)
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
+  build-windows-msvc:
     runs-on: windows-latest
 
     steps:
@@ -17,57 +17,54 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install Qt 6.7 MinGW (downgrade to avoid entrypoint bugs)
+    - name: Install Qt 6 MSVC
       uses: jurplel/install-qt-action@v4
       id: install-qt
       with:
-        version: '6.7.2'                  # ← фиксируем 6.7.2 — стабильная для MinGW в Actions
-        # или '6.7.*' если хочешь последнюю 6.7
+        version: '6.7.2'                  # стабильная, можно 6.8.* если хочешь, но 6.7 реже глючит
         host: windows
         target: desktop
-        arch: win64_mingw
+        arch: win64_msvc2019_64           # ← ключевой момент: MSVC вместо MinGW!
         install-deps: true
-        cache: true                       # кэширует Qt для ускорения следующих сборок
+        cache: true
+
+    - name: Setup MSVC environment
+      uses: ilammy/msvc-dev-cmd@v1      # активирует vcvarsall.bat (Visual Studio tools)
+      with:
+        toolset: 14.29                 # соответствует msvc2019
 
     - name: Create build directory
       run: New-Item -ItemType Directory -Path build -Force
 
-    - name: Configure CMake
+    - name: Configure CMake (MSVC)
       working-directory: build
-      shell: bash
+      shell: cmd                       # ← используем cmd вместо bash, потому что MSVC
       run: |
-        cmake .. \
-          -DCMAKE_BUILD_TYPE=Release \
-          -G "MinGW Makefiles" \
-          -DCMAKE_PREFIX_PATH="${{ steps.install-qt.outputs.qt-path }}" \
-          -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition -Wl,--export-all-symbols" \
-          -DQT_NO_DEBUG=ON
+        cmake .. ^
+          -DCMAKE_BUILD_TYPE=Release ^
+          -G "NMake Makefiles" ^
+          -DCMAKE_PREFIX_PATH="%QT_ROOT_DIR%" ^
+          -DCMAKE_VERBOSE_MAKEFILE=ON
 
     - name: Build
       working-directory: build
-      shell: bash
-      run: cmake --build . --config Release --parallel 8  # --parallel 8 для ускорения
+      shell: cmd
+      run: cmake --build . --config Release --parallel
 
     - name: Deploy Qt dependencies + copy exe
       working-directory: build
-      shell: bash
+      shell: cmd
       run: |
-        mkdir -p deploy
-        windeployqt --release open_work.exe \
-                    --dir deploy \
-                    --no-translations \
-                    --no-quick-import \
-                    --no-system-d3d-compiler \
-                    --no-opengl-sw
+        mkdir deploy
+        windeployqt --release open_work.exe --dir deploy
+        copy open_work.exe deploy\
 
-        cp open_work.exe deploy/
-
-    - name: Create ZIP archive
-      run: Compress-Archive -Path build/deploy/* -DestinationPath open_work-windows.zip -Force
+    - name: Create ZIP
+      run: Compress-Archive -Path build\deploy\* -DestinationPath open_work-windows.zip -Force
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: open_work-windows
+        name: open_work-windows-msvc
         path: open_work-windows.zip
         retention-days: 14
