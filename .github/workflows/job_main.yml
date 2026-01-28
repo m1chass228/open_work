@@ -29,9 +29,11 @@ jobs:
     - name: Configure CMake
       shell: bash
       run: |
-        mkdir build && cd build
+        mkdir -p build
+        cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release \
-                 -G "MinGW Makefiles"
+                 -G "MinGW Makefiles" \
+                 -DCMAKE_PREFIX_PATH="${{ steps.install-qt.outputs.qt-path }}"
 
     - name: Build
       shell: bash
