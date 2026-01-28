@@ -21,7 +21,7 @@ jobs:
       uses: jurplel/install-qt-action@v4
       id: install-qt
       with:
-        version: '6.8.*'                  # измени если твоя версия Qt другая
+        version: '6.8.*'                  # если не 6.8 — поменяй на свою (6.7.*, 6.5.* и т.д.)
         host: windows
         target: desktop
         arch: win64_mingw
@@ -37,7 +37,8 @@ jobs:
         cmake .. \
           -DCMAKE_BUILD_TYPE=Release \
           -G "MinGW Makefiles" \
-          -DCMAKE_PREFIX_PATH="${{ steps.install-qt.outputs.qt-path }}"
+          -DCMAKE_PREFIX_PATH="${{ steps.install-qt.outputs.qt-path }}" \
+          -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition"
 
     - name: Build
       working-directory: build
@@ -56,9 +57,10 @@ jobs:
                     --no-system-d3d-compiler \
                     --no-opengl-sw
 
+        # Копируем .exe в папку deploy
         cp open_work.exe deploy/
 
-    - name: Create ZIP
+    - name: Create ZIP archive
       run: Compress-Archive -Path build/deploy/* -DestinationPath open_work-windows.zip -Force
 
     - name: Upload artifact
